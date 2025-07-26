@@ -8,6 +8,7 @@ export default function Navbar() {
     backgroundColor: '#333',
     padding: '10px',
     color: 'white',
+    justifyContent: 'center'
   }
 
   const linkStyle = {
