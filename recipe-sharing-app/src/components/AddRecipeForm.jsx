@@ -1,8 +1,8 @@
-// AddReciepeForm component
+// AddRecipeForm component
 import { useState } from "react";
 import { useRecipeStore } from "./recipeStore";
 
-export default function AddReciepeForm () {
+export default function AddRecipeForm () {
     const addRecipe = useRecipeStore(state => state.addRecipe)
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
