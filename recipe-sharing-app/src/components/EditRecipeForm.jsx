@@ -22,7 +22,7 @@ export default function EditRecipeForm({ recipe }) {
         value={description}
         onChange={e => setDescription(e.target.value)}
       />
-      <button type="submit">Save Changes</button>
+      <button type="submit" onClick={(e)=>e.preventDefault()}>Save Changes</button>
     </form>
   );
 }
