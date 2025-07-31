@@ -1,5 +1,5 @@
 import RecipeList from './components/RecipeList'
-import AddReciepeForm from './components/AddRecipeForm'
+import AddRecipeForm from './components/AddRecipeForm'
 import './App.css'
 
 function App() {
@@ -7,7 +7,7 @@ function App() {
   return (
     <div>
       <RecipeList />
-      <AddReciepeForm />
+      <AddRecipeForm />
     </div>
   )
 }
