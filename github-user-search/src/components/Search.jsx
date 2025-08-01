@@ -24,14 +24,16 @@ export default function Search() {
 
   return (
     <div>
-      <input 
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Enter GitHub username"
-      />
+        <form action="" onSubmit={handleFetch}>
+            <input 
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Enter GitHub username"
+            />
 
-      <button onClick={handleFetch}>Search</button>
+            <button onClick={(e)=>{e.preventDefault(); handleFetch();}}>Search</button>
+        </form>
 
       {error && <p style={{ color: "red" }}>Looks like we cant find the user</p>}
 
