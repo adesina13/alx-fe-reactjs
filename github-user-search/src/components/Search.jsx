@@ -1,81 +1,91 @@
 import { useState } from "react";
 import fetchUserData from "../services/githubService";
-import { fetchSearchBy } from "../services/githubService";
 
 export default function Search() {
   const [username, setUsername] = useState("");
-  const [searchBy, setSearchBy] = useState("")
-  const [detail, setDetail] = useState(null);
-  const [searchDetail, setSearchDetail] = useState(null)
+  const [location, setLocation] = useState("");
+  const [minRepos, setMinRepos] = useState("");
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false)
 
-  
-  const handleFetch = async (e) => {
-    e.preventDefault()
-    setIsLoading(true)
+  const handleSearch = async () => {
+    setLoading(true);
+    setError("");
     try {
-      setError("");  // Clear previous error
-      const data = await fetchUserData(username);
-      setDetail(data);      // Set GitHub user data
-      const dataSearch = await fetchSearchBy(searchBy)
-      setSearchDetail(dataSearch)
+      const results = await fetchUserData({ username, location, minRepos });
+      setUsers(results);
     } catch (err) {
-      setDetail(null);
-      setError("User not found");
-    }finally{
-        setIsLoading(false)
+      setError("Something went wrong while fetching data.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-        <form action="" onSubmit={handleFetch}>
-            <input 
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter GitHub username"
-            />
-            <br/><br/>
-            <input 
-                type="text" 
-                value={searchBy}
-                onChange={(e)=>{setSearchBy(e.target.value)}}
-                placeholder="Search by"
-            />
-            <br/><br/>
-            <button >Search</button>
-        </form>
+    <div className="p-6 max-w-xl mx-auto bg-white text-black shadow-md rounded-lg mt-10">
+      <h1 className="text-2xl font-semibold mb-4 text-center">GitHub User Search</h1>
+      <div className="space-y-4">
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring"
+        />
+        <input
+          type="text"
+          placeholder="Location"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring"
+        />
+        <input
+          type="number"
+          placeholder="Minimum Repositories"
+          value={minRepos}
+          onChange={(e) => setMinRepos(e.target.value)}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring"
+        />
+        <button
+          onClick={handleSearch}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md"
+        >
+          {loading ? "Searching..." : "Search"}
+        </button>
+        {error && <p className="text-red-500">{error}</p>}
+      </div>
 
-      {error && <p style={{ color: "red" }}>Looks like we cant find the user</p>}
-
-      {isLoading && <p style={{ color: "green" }}>Loading...</p>}
-
-      {detail && (
-        <div>
-          <p><strong>Name:</strong> {detail.name || "N/A"}</p>
-          <p><strong>Username:</strong> {detail.login}</p>
-          <p><strong>Bio:</strong> {detail.bio || "No bio available"}</p>
-          <p><strong>Location:</strong> {detail.location || "Not specified"}</p>
-          <img src={detail.avatar_url} alt="avatar" width="100" />
-        </div>
-      )}
-
-      {searchDetail?.items && searchDetail.items.length > 0 && (
-        <div>
-            <h3>Search Results:</h3>
-            <ul>
-            {searchDetail.items.map((user) => (
-                <li key={user.id}>
-                <img src={user.avatar_url} alt={user.login} width="50" />
-                <a href={user.html_url} target="_blank" rel="noreferrer">{user.login}</a>
-                </li>
+      <div className="mt-6">
+        {users.length > 0 && (
+          <ul className="space-y-4">
+            {users.map((user) => (
+              <li key={user.id} className="border p-4 rounded-md">
+                <div className="flex items-center space-x-4">
+                  <img
+                    src={user.avatar_url}
+                    alt={user.login}
+                    className="w-16 h-16 rounded-full"
+                  />
+                  <div>
+                    <p className="text-lg font-medium">{user.login}</p>
+                    <p>Location: {user.location || "N/A"}</p>
+                    <p>Repos: {user.public_repos ?? "N/A"}</p>
+                    <a
+                      href={user.html_url}
+                      className="text-blue-600 underline"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View Profile
+                    </a>
+                  </div>
+                </div>
+              </li>
             ))}
-            </ul>
-        </div>
+          </ul>
         )}
-
+      </div>
     </div>
   );
 }
