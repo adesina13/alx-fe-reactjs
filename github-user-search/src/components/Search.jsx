@@ -54,7 +54,7 @@ export default function Search() {
             >
             {loading ? "Searching..." : "Search"}
             </button>
-            {error && <p className="text-red-500">{error}</p>}
+            {error && <p className="text-red-500">'Looks like we cant find the user</p>}
         </form>
       </div>
 
