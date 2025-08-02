@@ -1,19 +1,25 @@
 import { useState } from "react";
 import fetchUserData from "../services/githubService";
+import { fetchSearchBy } from "../services/githubService";
 
 export default function Search() {
   const [username, setUsername] = useState("");
+  const [searchBy, setSearchBy] = useState("")
   const [detail, setDetail] = useState(null);
+  const [searchDetail, setSearchDetail] = useState(null)
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false)
 
   
-  const handleFetch = async () => {
+  const handleFetch = async (e) => {
+    e.preventDefault()
     setIsLoading(true)
     try {
       setError("");  // Clear previous error
       const data = await fetchUserData(username);
       setDetail(data);      // Set GitHub user data
+      const dataSearch = await fetchSearchBy(searchBy)
+      setSearchDetail(dataSearch)
     } catch (err) {
       setDetail(null);
       setError("User not found");
@@ -31,8 +37,15 @@ export default function Search() {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter GitHub username"
             />
-
-            <button onClick={(e)=>{e.preventDefault(); handleFetch();}}>Search</button>
+            <br/><br/>
+            <input 
+                type="text" 
+                value={searchBy}
+                onChange={(e)=>{setSearchBy(e.target.value)}}
+                placeholder="Search by"
+            />
+            <br/><br/>
+            <button >Search</button>
         </form>
 
       {error && <p style={{ color: "red" }}>Looks like we cant find the user</p>}
@@ -48,6 +61,21 @@ export default function Search() {
           <img src={detail.avatar_url} alt="avatar" width="100" />
         </div>
       )}
+
+      {searchDetail?.items && searchDetail.items.length > 0 && (
+        <div>
+            <h3>Search Results:</h3>
+            <ul>
+            {searchDetail.items.map((user) => (
+                <li key={user.id}>
+                <img src={user.avatar_url} alt={user.login} width="50" />
+                <a href={user.html_url} target="_blank" rel="noreferrer">{user.login}</a>
+                </li>
+            ))}
+            </ul>
+        </div>
+        )}
+
     </div>
   );
 }

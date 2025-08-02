@@ -9,5 +9,16 @@ export default async function fetchUserData (username){
         return (response.data)
     }catch(error){
         console.error(error)
+        return(error || "Error")
+    }
+}
+
+
+export async function fetchSearchBy(query){
+    try{
+        const response = await axios(`https://api.github.com/search/users?q=${query}`)
+        return (response.data)
+    }catch(error){
+        return(error || "Error")
     }
 }
