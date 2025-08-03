@@ -4,6 +4,7 @@ export const useRecipeStore = create((set, get) => ({
   recipes: [],
   favorites: [],
   recommendations: [],
+  searchTerm:"",
 
   addRecipe: (newRecipe) =>
     set(state => ({ recipes: [...state.recipes, newRecipe] })),
@@ -13,6 +14,11 @@ export const useRecipeStore = create((set, get) => ({
       recipes: state.recipes.filter(recipe => recipe.id !== id),
       favorites: state.favorites.filter(favId => favId !== id), // auto-remove from favorites
     })),
+
+    setSearchTerm: (term) => {
+      set({ searchTerm: term }, false, 'setSearchTerm');
+      get().filterRecipes();
+    },
 
   updateRecipe: (updatedRecipe) =>
     set(state => ({
