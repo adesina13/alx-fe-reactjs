@@ -1,15 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 
-interface Recipe {
-  id: number;
-  title: string;
-  summary: string;
-  image: string;
-}
-
 export default function HomePage() {
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [recipes, setRecipes] = useState([]);
 
   useEffect(() => {
     fetch("/data.json")
@@ -20,7 +13,9 @@ export default function HomePage() {
 
   return (
     <div className="px-6 py-10">
-      <h1 className="text-3xl font-bold text-center mb-8">🍳 Recipe Sharing Platform</h1>
+      <h1 className="text-3xl font-bold text-center mb-8">
+        🍳 Recipe Sharing Platform
+      </h1>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {recipes.map((recipe) => (
