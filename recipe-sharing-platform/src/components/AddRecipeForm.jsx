@@ -8,12 +8,12 @@ export default function AddRecipeForm() {
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // ✅ Extract validation into its own function
+  const validate = () => {
     const newErrors = {};
 
-    // Basic validation
     if (!title.trim()) newErrors.title = "Title is required.";
+
     if (!ingredients.trim()) {
       newErrors.ingredients = "Ingredients are required.";
     } else {
@@ -22,6 +22,7 @@ export default function AddRecipeForm() {
         newErrors.ingredients = "Please provide at least 2 ingredients.";
       }
     }
+
     if (!steps.trim()) {
       newErrors.steps = "Preparation steps are required.";
     } else {
@@ -31,10 +32,17 @@ export default function AddRecipeForm() {
       }
     }
 
-    setErrors(newErrors);
+    return newErrors;
+  };
 
-    if (Object.keys(newErrors).length === 0) {
-      // Here you would normally send data to a backend or update global state
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const validationErrors = validate(); // ✅ use validate()
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      // Normally, send data to backend or global store
       console.log({
         title,
         ingredients: ingredients.split("\n"),
