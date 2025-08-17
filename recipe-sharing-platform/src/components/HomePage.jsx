@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom"; // ✅ Import Link
 
 export default function HomePage() {
   const [recipes, setRecipes] = useState([]);
@@ -32,12 +33,14 @@ export default function HomePage() {
             <div className="p-4">
               <h2 className="text-xl font-semibold mb-2">{recipe.title}</h2>
               <p className="text-gray-600 text-sm">{recipe.summary}</p>
-              <a
-                href={`/recipe/${recipe.id}`}
+
+              {/* ✅ Use Link instead of <a> */}
+              <Link
+                to={`/recipe/${recipe.id}`}
                 className="inline-block mt-4 text-blue-600 font-medium hover:underline"
               >
                 View Recipe →
-              </a>
+              </Link>
             </div>
           </div>
         ))}
